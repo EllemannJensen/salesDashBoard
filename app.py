@@ -1,6 +1,6 @@
  
 
-#################
+# import libraries
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
@@ -8,15 +8,12 @@ import pandas as pd
 import numpy as np
 from dash.dependencies import Output, Input
 
-data = pd.read_csv("/Users/elisabethwolff/sales_analytics/RandomSalesDataTest.csv", decimal=",",delimiter=";", infer_datetime_format=True)
-# data = data.query("Type == 'Online' and Region == 'A'")
-print(data)
-data["Date"] = pd.to_datetime(data["Date"], errors='coerce', infer_datetime_format=True) #format="%y-%m-%d")
+# read the data
+data = pd.read_csv("/Users/elisabethwolff/sales_analytics/RandomSalesData.csv", decimal=",",delimiter=";", infer_datetime_format=True)
+data["Date"] = pd.to_datetime(data["Date"], errors='coerce', infer_datetime_format=True)
 data.sort_values("Date", inplace=True)
 
-####app = dash.Dash(__name__)
-
-
+# the layout of the app
 external_stylesheets = [
     {
         "href": "https://fonts.googleapis.com/css2?"
@@ -33,18 +30,16 @@ app.layout = html.Div(
             children=[
                 html.P(children="=^_^=", className="header-emoji"),
                 html.H1(
-                    children="Ad Analytics", className="header-title"
+                    children="Online Ad Analytics", className="header-title"
                 ),
             html.P(
-                children="Analyze the prices of Ads sold"
-                " and the number of sold Ads",
+                children="Analyze the prices of Ads"
+                " and the number of Ads sold by State",
                 className="header-description",
                 ),
             ],
             className="header",
         ),
-        ########
-        
         html.Div(
             children=[
                 html.Div(
@@ -54,9 +49,9 @@ app.layout = html.Div(
                             id="region-filter",
                             options=[
                                 {"label": region, "value": region}
-                                for region in np.sort(data.Region.unique()) #(data.get("Region").unique())
+                                for region in np.sort(data.Region.unique()) 
                             ],
-                            value="A",
+                            value="Baden-Württemberg",
                             clearable=False,
                             className="dropdown",
                         ),
@@ -69,9 +64,9 @@ app.layout = html.Div(
                             id="type-filter",
                             options=[
                                 {"label": ad_type, "value": ad_type}
-                                for ad_type in data.Type.unique() # das und Region wieder zurück ändern? data.get('Type').unique()
+                                for ad_type in data.Type.unique() 
                             ],
-                            value="Online",
+                            value="Bing Ad",
                             clearable=False,
                             searchable=False,
                             className="dropdown",
@@ -96,7 +91,7 @@ app.layout = html.Div(
             ],
             className="menu",
         ),
-        ################
+        
         html.Div(
             children=[
                 html.Div(
@@ -129,24 +124,24 @@ app.layout = html.Div(
 )
 def update_charts(region, ad_type, start_date, end_date):
     mask = (
-        (data.Region == region) # test zurück? (data.get("Region") == region)
-        & (data.Type == ad_type) # test (data.get("Type") == ad_type)
-        & (data.Date >= start_date) #ist das richtig? war data.Date >= / compare datetime object to date object? data.Data.dt.date >=? & (data.get("Date") >= start_date)
-        & (data.Date <= end_date) # ? data.Date <=     & (data.get("Date") <= end_date) 
+        (data.Region == region) 
+        & (data.Type == ad_type) 
+        & (data.Date >= start_date) 
+        & (data.Date <= end_date)  
     )
     filtered_data = data.loc[mask, :]
     price_chart_figure = {
         "data": [
             {
                 "x": filtered_data["Date"],
-                "y": filtered_data["Price"],
+                "y": filtered_data["AveragePrice"],
                 "Type": "lines",
-                "hovertemplate": "$%{y:.2f}<extra></extra>",
+                "hovertemplate": "€%{y:.2f}<extra></extra>",
             },
         ],
         "layout": {
             "title": {
-                "text": "Price of Ads",
+                "text": "Average Price of Ads",
                 "x": 0.05,
                 "xanchor": "left",
             },
@@ -173,7 +168,7 @@ def update_charts(region, ad_type, start_date, end_date):
     }
     return price_chart_figure, volume_chart_figure
 
-
+# run app
 if __name__ == "__main__":
     app.run_server(debug=True)
 

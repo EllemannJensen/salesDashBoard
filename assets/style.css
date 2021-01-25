@@ -5,7 +5,7 @@ body {
 }
 
 .header {
-    background-color: #d418d4;
+    background-color: #eff5f7;
     height: 288px;
     padding: 16px 0 0 0;
 }
@@ -18,7 +18,7 @@ body {
 }
 
 .header-title {
-    color: #FFFFFF;
+    color: #0f0303;
     font-size: 48px;
     font-weight: bold;
     text-align: center;
@@ -26,7 +26,7 @@ body {
 }
 
 .header-description {
-    color: #CFCFCF;
+    color: #0c0505;
     margin: 4px auto;
     text-align: center;
     max-width: 384px;
@@ -73,5 +73,5 @@ body {
 .menu-title {
     margin-bottom: 6px;
     font-weight: bold;
-    color: #6b1fa8;
+    color: #115c66;
 }
