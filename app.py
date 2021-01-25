@@ -9,7 +9,7 @@ import numpy as np
 from dash.dependencies import Output, Input
 
 # read the data
-data = pd.read_csv("/Users/elisabethwolff/sales_analytics/RandomSalesData.csv", decimal=",",delimiter=";", infer_datetime_format=True)
+data = pd.read_csv("RandomSalesData.csv", decimal=",",delimiter=";", infer_datetime_format=True)
 data["Date"] = pd.to_datetime(data["Date"], errors='coerce', infer_datetime_format=True)
 data.sort_values("Date", inplace=True)
 
